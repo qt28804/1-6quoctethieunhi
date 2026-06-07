@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chúc Mai 1/6 💕</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background: radial-gradient(ellipse at 70% 50%, #2d0018 0%, #1a000f 40%, #0d0008 100%);
+  overflow:hidden;width:100vw;height:100vh;
+  font-family:'Segoe UI',sans-serif;cursor:none}
+
+/* animated nebula bg */
+#nebula{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 55% at 72% 48%, rgba(180,0,60,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 30% 55%, rgba(100,0,30,.14) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 40% at 50% 80%, rgba(80,0,20,.10) 0%, transparent 70%);
+  animation: nebulaPulse 8s ease-in-out infinite alternate;
+}
+@keyframes nebulaPulse{
+  from{ opacity:.7; transform:scale(1); }
+  to{   opacity:1;  transform:scale(1.04); }
+}
+
+/* star field */
+#stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* Three.js canvas — right half only */
+#heartWrap{
+  position:fixed;right:0;top:0;
+  width:58%;height:100%;
+  z-index:1;
+  /* scale down slightly so heart fits right half */
+}
+#heartWrap canvas{
+  width:100% !important;
+  height:100% !important;
+}
+
+#cursor{position:fixed;pointer-events:none;z-index:100;
+  transform:translate(-50%,-50%);font-size:20px;
+  filter:drop-shadow(0 0 6px #c0002a)}
+
+/* ===== LEFT PANEL ===== */
+#leftPanel{position:fixed;left:0;top:0;width:42%;height:100%;z-index:10;
+  display:flex;align-items:center;padding:0 3% 0 6%;pointer-events:none}
+.textWrap{display:flex;flex-direction:column;gap:17px;width:100%}
+.line{opacity:0;transform:translateX(-60px);
+  transition:opacity .75s ease,transform .75s cubic-bezier(.34,1.3,.64,1)}
+.line.show{opacity:1;transform:translateX(0)}
+
+.tag{display:inline-block;
+  background:linear-gradient(135deg,#c0002a,#7b0020);
+  color:#ffb3c1;font-weight:800;font-size:.82rem;
+  padding:5px 18px;border-radius:50px;letter-spacing:2px;
+  box-shadow:0 0 22px rgba(192,0,42,.7);animation:glow 2s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 44px rgba(220,0,50,1)}}
+
+.heading{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;line-height:1.28;
+  background:linear-gradient(135deg,#ff4d6d,#c9184a,#ff758c,#ff4d6d);
+  background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:rb 6s linear infinite}
+@keyframes rb{to{background-position:300%}}
+
+.msg{font-size:clamp(.85rem,1.5vw,1.05rem);color:rgba(255,180,190,.9);
+  line-height:1.85;text-shadow:0 0 18px rgba(192,0,42,.35)}
+.msg span{display:block}
+
+.hearts-row{display:flex;gap:10px}
+.mh{font-size:1.35rem;animation:fh 2s ease-in-out infinite}
+.mh:nth-child(1){color:#ff4d6d;animation-delay:0s}
+.mh:nth-child(2){color:#c9184a;animation-delay:.22s}
+.mh:nth-child(3){color:#ff758c;animation-delay:.44s}
+.mh:nth-child(4){color:#ff4d6d;animation-delay:.66s}
+.mh:nth-child(5){color:#a4133c;animation-delay:.88s}
+.mh:nth-child(6){color:#ff758c;animation-delay:1.1s}
+@keyframes fh{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.25)}}
+
+.quote{font-size:clamp(.74rem,1.2vw,.9rem);color:rgba(255,150,170,.52);
+  font-style:italic;border-left:2px solid rgba(192,0,42,.45);
+  padding-left:12px;line-height:1.65}
+.divider{width:55%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(192,0,42,.55),transparent)}
+.typed::after{content:'|';animation:blink .7s step-end infinite;color:#ff4d6d}
+@keyframes blink{50%{opacity:0}}
+
+#hint{position:fixed;bottom:13px;left:50%;transform:translateX(-50%);
+  color:rgba(255,150,170,.35);font-size:.68rem;z-index:20;pointer-events:none;
+  animation:fade 3s ease-in-out 3s infinite alternate;text-align:center}
+@keyframes fade{from{opacity:.12}to{opacity:.6}}
+
+#surprise{position:fixed;top:0;left:0;width:100%;height:100%;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0);pointer-events:none;transition:background .4s}
+#surpriseText{font-size:clamp(1.8rem,6vw,4rem);font-weight:900;text-align:center;
+  opacity:0;transform:scale(0) rotate(-8deg);
+  background:linear-gradient(90deg,#ff4d6d,#c9184a,#ff758c,#ff4d6d);
+  background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:rb 3s linear infinite;
+  filter:drop-shadow(0 0 28px rgba(192,0,42,.9));
+  transition:opacity .35s,transform .35s}
+#counter{position:fixed;top:13px;right:16px;z-index:20;
+  color:rgba(255,150,170,.38);font-size:.7rem;pointer-events:none}
+
+/* ===== QUIZ OVERLAY ===== */
+#quiz{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:200;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+  transition:opacity .5s;
+}
+#quizBox{
+  background:rgba(20,0,8,.9);
+  border:1px solid rgba(255,77,109,.35);
+  border-radius:24px;padding:36px 40px;max-width:480px;width:88vw;
+  text-align:center;
+  box-shadow:0 0 60px rgba(192,0,42,.4);
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+#quizQ{
+  font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;
+  color:#ffb3c1;margin-bottom:24px;line-height:1.5;
+}
+.qBtns{display:flex;flex-direction:column;gap:12px}
+.qBtn{
+  background:rgba(192,0,42,.15);border:1px solid rgba(255,77,109,.4);
+  color:#ffb3c1;font-size:.95rem;padding:12px 20px;border-radius:50px;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.qBtn:hover{background:rgba(192,0,42,.45);border-color:#ff4d6d;
+  transform:scale(1.03);box-shadow:0 0 20px rgba(255,77,109,.4)}
+#quizReply{
+  margin-top:20px;font-size:1.05rem;color:#ff758c;
+  min-height:28px;font-weight:600;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#quizNext{
+  margin-top:18px;display:none;
+  background:linear-gradient(135deg,#c0002a,#ff4d6d);
+  color:#fff;border:none;padding:11px 32px;border-radius:50px;
+  font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:0 0 20px rgba(192,0,42,.5);transition:transform .15s;
+}
+#quizNext:hover{transform:scale(1.05)}
+#skipQuiz{
+  margin-top:14px;display:block;
+  background:none;border:none;color:rgba(255,150,170,.4);
+  font-size:.72rem;cursor:pointer;font-family:inherit;
+}
+#skipQuiz:hover{color:rgba(255,150,170,.8)}
+/* restore cursor inside quiz */
+#quiz, #quiz *{ cursor:auto }
+#quiz .qBtn, #quizNext, #skipQuiz{ cursor:pointer }
+</style>
+</head>
+<body>
+
+<!-- Heart container — Three.js renders here -->
+<div id="heartWrap"></div>
+
+<div id="cursor">❤</div>
+
+<!-- LEFT TEXT -->
+<div id="leftPanel">
+  <div class="textWrap">
+    <div class="line" id="l0"><span class="tag">🎉 Ngày 1 tháng 6 🎉</span></div>
+    <div class="line" id="l1"><div class="heading">Chúc Mai<br>vui vẻ ngày 1/6! 🌸</div></div>
+    <div class="line" id="l2"><div class="divider"></div></div>
+    <div class="line" id="l3">
+      <div class="msg">
+        <span>🌸 Chúc Mai luôn vui vẻ</span>
+        <span>và hồn nhiên như trẻ thơ</span>
+        <span>mãi mãi nhé! 💕</span>
+      </div>
+    </div>
+    <div class="line" id="l4"><div class="msg typed" id="typeTarget"></div></div>
+    <div class="line" id="l5">
+      <div class="hearts-row">
+        <span class="mh">♥</span><span class="mh">♥</span><span class="mh">♥</span>
+        <span class="mh">♥</span><span class="mh">♥</span><span class="mh">♥</span>
+      </div>
+    </div>
+    <div class="line" id="l6">
+      <div class="quote">"Hồn nhiên là món quà đẹp nhất —<br>đừng bao giờ để mất nó, Mai nhé" 🌙</div>
+    </div>
+  </div>
+</div>
+
+<div id="surprise"><div id="surpriseText"></div></div>
+<div id="hint">✨ Kéo để xoay 3D · Cuộn để zoom ✨</div>
+<div id="counter">❤ <span id="cnt">0</span></div>
+
+<!-- QUIZ OVERLAY -->
+<div id="quiz">
+  <div id="quizBox">
+    <div id="quizQ">🎀 Hôm nay Mai có vui không?</div>
+    <div class="qBtns" id="qBtns"></div>
+    <div id="quizReply"></div>
+    <button id="quizNext">Câu tiếp theo ➜</button>
+    <button id="skipQuiz">bỏ qua</button>
+  </div>
+</div>
+
+<!-- Three.js libs from local js/ folder -->
+<script src="js/three.min.js"></script>
+<script src="js/MeshSurfaceSampler.js"></script>
+<script src="js/TrackballControls.js"></script>
+<script src="js/simplex-noise.js"></script>
+<script src="js/OBJLoader.js"></script>
+<script src="js/gsap.min.js"></script>
+
+<script>
+/* ============================================================
+   TYMLYTUAN HEART ENGINE — mounted inside #heartWrap
+   Exact same logic as script.js, renderer attached to heartWrap
+============================================================ */
+(function(){
+  const wrap = document.getElementById('heartWrap');
+
+  const scene    = new THREE.Scene();
+  const camera   = new THREE.PerspectiveCamera(75, wrap.clientWidth / wrap.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+  renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  wrap.appendChild(renderer.domElement);
+
+  camera.position.z = 1.8;
+
+  const controls = new THREE.TrackballControls(camera, renderer.domElement);
+  controls.noPan      = true;
+  controls.maxDistance = 3;
+  controls.minDistance = 0.7;
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  let heart = null, sampler = null, originHeart = null;
+
+  new THREE.OBJLoader().load(
+    'https://assets.codepen.io/127738/heart_2.obj',
+    (obj) => {
+      heart = obj.children[0];
+      heart.geometry.rotateX(-Math.PI * 0.5);
+      heart.geometry.scale(0.04, 0.04, 0.04);
+      heart.geometry.translate(0, -0.4, 0);
+      group.add(heart);
+      heart.material = new THREE.MeshBasicMaterial({ color: new THREE.Color('rgb(0,0,0)') });
+      originHeart = Array.from(heart.geometry.attributes.position.array);
+      sampler = new THREE.MeshSurfaceSampler(heart).build();
+      init();
+      renderer.setAnimationLoop(render);
+    }
+  );
+
+  let positions = [], colors = [];
+  const geometry = new THREE.BufferGeometry();
+  const material = new THREE.PointsMaterial({ vertexColors: true, size: 0.009 });
+  const particles = new THREE.Points(geometry, material);
+  group.add(particles);
+
+  const simplex  = new SimplexNoise();
+  const pos      = new THREE.Vector3();
+  // Palette: đỏ/hồng thuần — không rainbow
+  const palette  = [
+    new THREE.Color('#ff1744'),
+    new THREE.Color('#ff4d6d'),
+    new THREE.Color('#c9184a'),
+    new THREE.Color('#ff758c'),
+    new THREE.Color('#ff0a54'),
+    new THREE.Color('#ffb3c1'),
+  ];
+
+  class SparkPoint {
+    constructor(){
+      sampler.sample(pos);
+      this.color = palette[Math.floor(Math.random() * palette.length)];
+      this.rand  = Math.random() * 0.03;
+      this.pos   = pos.clone();
+      this.one   = null;
+      this.two   = null;
+    }
+    update(a){
+      const noise  = simplex.noise4D(this.pos.x, this.pos.y, this.pos.z, 0.1) + 1.5;
+      const noise2 = simplex.noise4D(this.pos.x*500, this.pos.y*500, this.pos.z*500, 1) + 1;
+      this.one = this.pos.clone().multiplyScalar(1.01 + noise  * 0.15 * beat.a);
+      this.two = this.pos.clone().multiplyScalar(1    + noise2 * 1    * (beat.a + 0.3) - beat.a * 1.2);
+    }
+  }
+
+  let spikes = [];
+  function init(){
+    positions = []; colors = [];
+    for(let i = 0; i < 10000; i++) spikes.push(new SparkPoint());
+  }
+
+  const beat = { a: 0 };
+  gsap.timeline({ repeat: -1, repeatDelay: 0.3 })
+    .to(beat, { a: 0.5, duration: 0.6, ease: 'power2.in'  })
+    .to(beat, { a: 0.0, duration: 0.6, ease: 'power3.out' });
+
+  const maxZ = 0.23, rateZ = 0.5;
+
+  function render(a){
+    positions = []; colors = [];
+    spikes.forEach(g => {
+      g.update(a);
+      const rand = g.rand, color = g.color;
+      if(maxZ*rateZ + rand > g.one.z && g.one.z > -maxZ*rateZ - rand){
+        positions.push(g.one.x, g.one.y, g.one.z);
+        colors.push(color.r, color.g, color.b);
+      }
+      if(maxZ*rateZ + rand*2 > g.one.z && g.one.z > -maxZ*rateZ - rand*2){
+        positions.push(g.two.x, g.two.y, g.two.z);
+        colors.push(color.r, color.g, color.b);
+      }
+    });
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    geometry.setAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors),    3));
+
+    const vs = heart.geometry.attributes.position.array;
+    for(let i = 0; i < vs.length; i += 3){
+      const v = new THREE.Vector3(originHeart[i], originHeart[i+1], originHeart[i+2]);
+      const noise = simplex.noise4D(
+        originHeart[i]*1.5, originHeart[i+1]*1.5, originHeart[i+2]*1.5, a*0.0005
+      ) + 1;
+      v.multiplyScalar(noise * 0.15 * beat.a);
+      vs[i] = v.x; vs[i+1] = v.y; vs[i+2] = v.z;
+    }
+    heart.geometry.attributes.position.needsUpdate = true;
+
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', () => {
+    camera.aspect = wrap.clientWidth / wrap.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  });
+})();
+</script>
+
+<script>
+/* ============================================================
+   UI — cursor, text, typewriter, surprise, audio
+============================================================ */
+document.addEventListener('mousemove', e => {
+  const c = document.getElementById('cursor');
+  // ẩn cursor tùy chỉnh khi hover vào quiz
+  const overQuiz = e.target.closest('#quiz');
+  c.style.opacity = overQuiz ? '0' : '1';
+  c.style.left = e.clientX + 'px';
+  c.style.top  = e.clientY + 'px';
+});
+
+/* ---- Web Audio ---- */
+let audioCtx;
+function ensureAudio(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); }
+const NOTES = [261.63,329.63,392,523.25,659.25];
+function chime(x){
+  ensureAudio();
+  const note=NOTES[Math.floor(Math.random()*NOTES.length)];
+  const osc=audioCtx.createOscillator(), g=audioCtx.createGain(), p=audioCtx.createStereoPanner();
+  osc.type='sine';
+  osc.frequency.setValueAtTime(note, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(note*.5, audioCtx.currentTime+.9);
+  g.gain.setValueAtTime(.12, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime+1);
+  p.pan.value = (x/innerWidth)*2-1;
+  osc.connect(g).connect(p).connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime+1);
+}
+
+/* ---- Surprise ---- */
+const surprises = ['💕 Chúc Mai vui mãi!','❤ Hồn nhiên mãi nha Mai!','🌹 Mai là ngôi sao hôm nay!','💌 Ngày 1/6 của riêng Mai!','🌸 Cười lên đi Mai ơi!','❤ Gửi trọn yêu thương đến Mai!','🌹 Xinh như hoa vậy đó!','💕 Ước mơ bay cao nha!'];
+let clickCnt = 0;
+const surEl = document.getElementById('surprise'), surTxt = document.getElementById('surpriseText');
+let surTimer;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function showSurprise(msg){
+  surTxt.textContent = msg || pick(surprises);
+  surEl.style.background = 'rgba(0,0,0,.55)'; surEl.style.pointerEvents = 'auto';
+  surTxt.style.opacity = '1'; surTxt.style.transform = 'scale(1) rotate(0deg)';
+  clearTimeout(surTimer);
+  surTimer = setTimeout(()=>{ surEl.style.background='rgba(0,0,0,0)'; surEl.style.pointerEvents='none'; surTxt.style.opacity='0'; surTxt.style.transform='scale(0) rotate(-8deg)'; }, 2400);
+}
+
+document.addEventListener('click', e => {
+  if(e.target.closest('#leftPanel') || e.target.closest('#surprise')) return;
+  chime(e.clientX);
+  clickCnt++; document.getElementById('cnt').textContent = clickCnt;
+  if(clickCnt % 7 === 0) showSurprise();
+});
+
+/* ---- Text slide-in ---- */
+['l0','l1','l2','l3','l4','l5','l6'].forEach((id,i) => {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if(el) el.classList.add('show');
+    if(id === 'l4') startTypewriter();
+  }, 600 + i*370);
+});
+
+const typeMsgs = ['Chúc Mai 1/6 vui vẻ ❤','Hồn nhiên như trẻ thơ mãi nha 💕','Ngày của Mai — ngày đặc biệt 🌹'];
+let tIdx=0, tChar=0, tDel=false;
+const tEl = document.getElementById('typeTarget');
+function startTypewriter(){
+  function tick(){
+    const msg = typeMsgs[tIdx];
+    if(!tDel){ tChar++; tEl.textContent=msg.slice(0,tChar); if(tChar===msg.length){ tDel=true; setTimeout(tick,1900); return; } }
+    else { tChar--; tEl.textContent=msg.slice(0,tChar); if(tChar===0){ tDel=false; tIdx=(tIdx+1)%typeMsgs.length; setTimeout(tick,450); return; } }
+    setTimeout(tick, tDel?40:80);
+  }
+  tick();
+}
+
+setTimeout(() => showSurprise('❤ Chúc Mai 1/6 vui vẻ! 💕'), 4000);
+
+/* ============================================================
+   QUIZ TROLL
+============================================================ */
+const QUIZ = [
+  {
+    q: '🎀 Hôm nay Mai có vui không?',
+    opts: ['Vui lắm! 😄', 'Bình thường 😐', 'Không vui lắm 😒'],
+    replies: [
+      '😂 Ừ thì vui đi, hôm nay ngày của Mai mà!',
+      '😤 Bình thường?! Hôm nay ngày 1/6 đặc biệt lắm đó nha!',
+      '🤨 Không vui?? Thôi được, mình sẽ làm Mai vui... bằng cách... chúc tiếp 😂'
+    ]
+  },
+  {
+    q: '🎁 Mai muốn được gì nhất hôm nay?',
+    opts: ['Được nghỉ ngơi 😴', 'Được ăn ngon 🍰', 'Được yêu thương 💕', 'Được tiền 💸'],
+    replies: [
+      '😂 Ừ thì ngủ đi, nhưng đọc hết cái này đã nha!',
+      '🍰 Hợp lý! Hôm nay ăn gì ngon thì tag mình với!',
+      '🥺 Aww... được rồi, mình gửi yêu thương qua màn hình nè 💕',
+      '💸 Thực tế vãi 😂 Mình nghèo lắm, chỉ có tim thôi nha!'
+    ]
+  },
+  {
+    q: '🌸 Mai nghĩ mình còn hồn nhiên không?',
+    opts: ['Còn lắm chứ! 👶', 'Hơi già rồi 😅', 'Tùy lúc thôi 🤔', 'Hỏi chi vậy 😒'],
+    replies: [
+      '🎉 Đúng rồi! Mãi hồn nhiên nha, đừng già đi!',
+      '😂 Già đâu có! Hôm nay ngày thiếu nhi, Mai vẫn là trẻ con!',
+      '🤣 Tùy lúc... tức là lúc nào cũng được hồn nhiên đó!',
+      '😂 Hỏi để biết chứ sao! Câu trả lời là: vẫn còn hồn nhiên lắm!'
+    ]
+  },
+  {
+    q: '💌 Cuối cùng — Mai có biết ai gửi cái này không?',
+    opts: ['Biết rồi 😏', 'Không biết 🤔', 'Đoán được 😄', 'Quan trọng gì đâu 😂'],
+    replies: [
+      '😏 Ừ thì biết rồi... nhưng mà vẫn đẹp chứ? 😄',
+      '🤭 Thôi bí mật! Chỉ biết là người đó chúc Mai vui thôi!',
+      '🎯 Thông minh! Nhưng mà... đoán đúng chưa? 😏',
+      '😂 Đúng rồi! Quan trọng là Mai vui — Chúc 1/6 nha! ❤'
+    ]
+  }
+];
+
+let qIdx = 0;
+const quizEl    = document.getElementById('quiz');
+const quizQ     = document.getElementById('quizQ');
+const qBtns     = document.getElementById('qBtns');
+const quizReply = document.getElementById('quizReply');
+const quizNext  = document.getElementById('quizNext');
+const skipQuiz  = document.getElementById('skipQuiz');
+
+function renderQuestion(){
+  const q = QUIZ[qIdx];
+  quizQ.textContent = q.q;
+  quizReply.textContent = '';
+  quizNext.style.display = 'none';
+  qBtns.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'qBtn';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      // disable all buttons
+      [...qBtns.querySelectorAll('.qBtn')].forEach(b => {
+        b.style.opacity = '0.4'; b.style.pointerEvents = 'none';
+      });
+      btn.style.opacity = '1';
+      btn.style.background = 'rgba(192,0,42,.5)';
+      btn.style.borderColor = '#ff4d6d';
+      quizReply.textContent = q.replies[i];
+      quizNext.style.display = qIdx < QUIZ.length - 1 ? 'inline-block' : 'none';
+      if(qIdx >= QUIZ.length - 1){
+        // last question — close after delay
+        setTimeout(closeQuiz, 2800);
+      }
+    };
+    qBtns.appendChild(btn);
+  });
+}
+
+function closeQuiz(){
+  quizEl.style.opacity = '0';
+  quizEl.style.pointerEvents = 'none';
+  setTimeout(()=>{ quizEl.style.display='none'; }, 500);
+}
+
+quizNext.onclick = () => {
+  qIdx++;
+  if(qIdx < QUIZ.length){
+    // animate out then in
+    quizQ.style.opacity = '0';
+    setTimeout(()=>{
+      renderQuestion();
+      quizQ.style.opacity = '1';
+    }, 250);
+  }
+};
+
+skipQuiz.onclick = closeQuiz;
+
+// Start quiz immediately
+renderQuestion();
+</script>
+</body>
+</html>
